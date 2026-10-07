@@ -20,5 +20,9 @@
   "bugs": {
     "url": "https://github.com/GabGonio/event-registration-service/issues"
   },
-  "homepage": "https://github.com/GabGonio/event-registration-service#readme"
+  "homepage": "https://github.com/GabGonio/event-registration-service#readme",
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^26.6.4"
+  }
 }

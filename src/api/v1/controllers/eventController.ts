@@ -1,25 +1,32 @@
 import { Request, Response, NextFunction } from "express";
 import { HTTP_STATUS } from "../../../constants/httpConstants";
-import * as itemService from "../services/itemService";
-import type { Item } from "../models/itemModel";
+import * as eventService from "../services/eventService";
 
-export const getAllItems = async (
+
+interface EventData {
+    id?: string;
+    name: string;
+    description: string;
+}
+
+
+export const getAllEvents = async (
   req: Request,
   res: Response,
   next: NextFunction
 ): Promise<void> => {
   try {
-    const items: Item[] = await itemService.getAllItems();
+    const events: EventData[] = await eventService.getAllEvents();
     res.status(HTTP_STATUS.OK).json({
-      message: "Items retrieved successfully",
-      data: items,
+      message: "Events retrieved successfully",
+      data: events,
     });
   } catch (error) {
     next(error);
   }
 };
 
-export const createItem = async (
+export const createEvent = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -28,22 +35,22 @@ export const createItem = async (
     // Basic validation - check for required fields
     if (!req.body.name) {
       res.status(HTTP_STATUS.BAD_REQUEST).json({
-        message: "Item name is required",
+        message: "Event name is required",
       });
     } else if (!req.body.description) {
       res.status(HTTP_STATUS.BAD_REQUEST).json({
-        message: "Item description is required",
+        message: "Event description is required",
       });
     } else {
       // Extract only the fields we need
       const { name, description } = req.body;
 
-      const itemData = { name, description };
+      const eventData = { name, description };
 
-      const newItem: Item = await itemService.createItem(itemData);
+      const newEvent: EventData = await eventService.createEvent(eventData);
       res.status(HTTP_STATUS.CREATED).json({
-        message: "Item created successfully",
-        data: newItem,
+        message: "Event created successfully",
+        data: newEvent,
       });
     }
   } catch (error) {
@@ -51,7 +58,7 @@ export const createItem = async (
   }
 };
 
-export const updateItem = async (
+export const updateEvent = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -65,26 +72,26 @@ export const updateItem = async (
     // Create update data object with only the fields that can be updated
     const updateData = { name, description };
 
-    const updatedItem: Item = await itemService.updateItem(id, updateData);
+    const updatedEvent: EventData = await eventService.updateEvent(id, updateData);
     res.status(HTTP_STATUS.OK).json({
-      message: "Item updated successfully",
-      data: updatedItem,
+      message: "Event updated successfully",
+      data: updatedEvent,
     });
   } catch (error) {
     next(error);
   }
 };
 
-export const deleteItem = async (
+export const deleteEvent = async (
   req: Request,
   res: Response,
   next: NextFunction
 ): Promise<void> => {
   try {
     const { id } = req.params;
-    await itemService.deleteItem(id);
+    await eventService.deleteEvent(id);
     res.status(HTTP_STATUS.OK).json({
-      message: "Item deleted successfully",
+      message: "Event deleted successfully",
     });
   } catch (error) {
     next(error);

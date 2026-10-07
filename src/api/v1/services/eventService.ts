@@ -1,64 +1,70 @@
-import { Item } from "../models/itemModel";
+export interface EventData {
+    id?: string;
+    name: string;
+    description: string;
+    createdAt?: Date;
+    updatedAt?: Date;
+}
 
 // In-memory storage for demo purposes
-const items: Item[] = [];
+const events: EventData[] = [];
 
 /**
  * Retrieves all items from storage
  * @returns Array of all items
  */
-export const getAllItems = async (): Promise<Item[]> => {
+export const getAllEvents = async (): Promise<EventData[]> => {
   // Return a deep clone to avoid direct mutation
-  return structuredClone(items);
+  return structuredClone(events);
 };
 
 /**
  * Creates a new item
- * @param itemData - The data for the new item (name and description)
+ * @param eventData - The data for the new item (name and description)
  * @returns The created item with generated ID
  */
-export const createItem = async (itemData: {
+export const createEvent = async (eventData: {
   name: string;
   description: string;
-}): Promise<Item> => {
+}): Promise<EventData> => {
   // Create a new item with auto-generated ID
-  const newItem: Item = {
+  const newEvent: EventData = {
     id: Date.now().toString(),
-    name: itemData.name,
-    description: itemData.description,
+    name: eventData.name,
+    description: eventData.description,
     createdAt: new Date(),
     updatedAt: new Date(),
   };
 
-  items.push(newItem);
-  return structuredClone(newItem);
+  events.push(newEvent);
+  return structuredClone(newEvent);
 };
 
 /**
  * Updates an existing item
  * @param id - The ID of the item to update
- * @param itemData - The fields to update (name and/or description)
+ * @param eventData - The fields to update (name and/or description)
  * @returns The updated item
  * @throws Error if item with given ID is not found
  */
-export const updateItem = async (
+export const updateEvent = async (
   id: string,
-  itemData: Pick<Item, "name" | "description">
-): Promise<Item> => {
-  const index: number = items.findIndex((item: Item) => item.id === id);
+  eventData: Pick<EventData, "name" | "description">
+): Promise<EventData> => {
+  const index: number = events.findIndex((event: EventData) => event.id === id);
 
   if (index === -1) {
     throw new Error(`Item with ID ${id} not found`);
   }
 
   // Update the item with the provided fields
-  items[index] = {
-    ...items[index],
-    ...itemData,
+  events[index] = {
+    ...events[index],
+    ...eventData,
     updatedAt: new Date(),
   };
 
-  return structuredClone(items[index]);
+  return structuredClone(events[index]);
 };
 
 /**
@@ -66,11 +72,11 @@ export const updateItem = async (
  * @param id - The ID of the item to delete
  * @throws Error if item with given ID is not found
  */
-export const deleteItem = async (id: string): Promise<void> => {
-  const index: number = items.findIndex((item: Item) => item.id === id);
+export const deleteEvent = async (id: string): Promise<void> => {
+  const index: number = events.findIndex((event: EventData) => event.id === id);
 
   if (index === -1) {
-    throw new Error(`Item with ID ${id} not found`);
+    throw new Error(`Event with ID ${id} not found`);
   }
 
   items.splice(index, 1);
