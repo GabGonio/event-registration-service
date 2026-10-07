@@ -1,14 +1,29 @@
 export interface EventData {
-    id?: string;
+    id: number;
     name: string;
-    description: string;
-    createdAt?: Date;
-    updatedAt?: Date;
+    date: string;
+    capacity: number;
+    registrationCount: number;
+}
+
+export interface Attendee {
+    id: number;
+    name: string;
+    email: string;
 }
 
 // In-memory storage for demo purposes
-const events: EventData[] = [];
+const events: EventData[] = [
 
+    { id: 1, name: "Tech Conference 2025", date: "2025-03-15T09:00:00.000Z", capacity: 200, registrationCount: 185 },
+    { id: 2, name: "Startup Pitch Night", date: "2025-02-20T18:00:00.000Z", capacity: 50, registrationCount: 12 },
+    { id: 3, name: "Web Dev Workshop", date: "2025-02-10T10:00:00.000Z", capacity: 30, registrationCount: 30 }
+];
+
+const attendees: Attendee[] = [
+    { id: 1, name: "Jordan Smith", email: "jordan.smith@email.com" },
+    { id: 2, name: "Alex Chen", email: "alex.chen@email.com" }
+];
 /**
  * Retrieves all items from storage
  * @returns Array of all items
@@ -25,15 +40,16 @@ export const getAllEvents = async (): Promise<EventData[]> => {
  */
 export const createEvent = async (eventData: {
   name: string;
-  description: string;
+  date: string;
+  capacity: number;
 }): Promise<EventData> => {
   // Create a new item with auto-generated ID
   const newEvent: EventData = {
-    id: Date.now().toString(),
+    id: Date.now(),
     name: eventData.name,
-    description: eventData.description,
-    createdAt: new Date(),
-    updatedAt: new Date(),
+    date: eventData.date,
+    capacity: eventData.capacity,
+    registrationCount: 0
   };
 
   events.push(newEvent);
@@ -48,8 +64,8 @@ export const createEvent = async (eventData: {
  * @throws Error if item with given ID is not found
  */
 export const updateEvent = async (
-  id: string,
-  eventData: Pick<EventData, "name" | "description">
+  id: number,
+  eventData: Pick<EventData, "name" | "date" | "capacity" | "registrationCount">
 ): Promise<EventData> => {
   const index: number = events.findIndex((event: EventData) => event.id === id);
 
@@ -61,7 +77,6 @@ export const updateEvent = async (
   events[index] = {
     ...events[index],
     ...eventData,
-    updatedAt: new Date(),
   };
 
   return structuredClone(events[index]);
@@ -72,12 +87,12 @@ export const updateEvent = async (
  * @param id - The ID of the item to delete
  * @throws Error if item with given ID is not found
  */
-export const deleteEvent = async (id: string): Promise<void> => {
+export const deleteEvent = async (id: number): Promise<void> => {
   const index: number = events.findIndex((event: EventData) => event.id === id);
 
   if (index === -1) {
     throw new Error(`Event with ID ${id} not found`);
   }
 
-  items.splice(index, 1);
+  events.splice(index, 1);
 };
