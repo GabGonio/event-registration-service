@@ -4,9 +4,11 @@ import * as eventService from "../services/eventService";
 
 
 interface EventData {
-    id?: string;
+    id?: number;
     name: string;
-    description: string;
+    date: string;
+    capacity: number;
+    registrationCount?: number;
 }
 
 
@@ -16,7 +18,7 @@ export const getAllEvents = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const events: EventData[] = await eventService.getAllEvents();
+    const events = await eventService.getAllEvents();
     res.status(HTTP_STATUS.OK).json({
       message: "Events retrieved successfully",
       data: events,
@@ -26,7 +28,7 @@ export const getAllEvents = async (
   }
 };
 
-export const createEvent = async (
+export const getEventById = async (
   req: Request,
   res: Response,
   next: NextFunction

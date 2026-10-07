@@ -12,6 +12,12 @@ export interface Attendee {
     email: string;
 }
 
+export interface PopularityResponse extends EventData {
+    spotsRemaining: number;
+    popularityScre: number;
+    popularityTier: string;
+}
+
 // In-memory storage for demo purposes
 const events: EventData[] = [
 
